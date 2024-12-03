@@ -70,8 +70,7 @@ const orders = async (req, res) => {
 
         // const id = 1000;
         // const orderId = await orderSchema.countDocuments() + id;
-        console.log(cartData, 'hghfg');
-        console.log(totalDoc, 'hghfg%%%%%%');
+     
         res.render("orders", { cartData, totalDoc, page });
     } catch (error) {
         console.log(error.message);
