@@ -1,40 +1,40 @@
- const User = require('../model/userSchema');
+const User = require('../model/userSchema');
 
  
  
   
   
   
-  const isLogin = (req, res, next) => {
-    try {
+const isLogin = (req, res, next) => {
+  try {
 
-        if (req.session.user_id) {
-            next()
-        }
-        else {
-            res.redirect('/login');
-        }
+      if (req.session.user_id) {
+          next()
+      }
+      else {
+          res.redirect('/login');
+      }
 
-    } catch (error) {
-        console.log(error);
-    }
+  } catch (error) {
+      console.log(error);
+  }
 }
 
 
 const isLogout = (req, res, next) => {
-    try {
-        if (req.session.user_id) {
-         
-            res.redirect('/');
+  try {
+      if (req.session.user_id) {
+       
+          res.redirect('/');
 
-        } else {
-           
-            next();
-        }
+      } else {
+        
+          next();
+      }
 
-    } catch (error) {
-        console.log(error)
-    }
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 
@@ -43,36 +43,34 @@ const isLogout = (req, res, next) => {
 
 
 const adminblock = async (req,res,next) => {
-   
-    
-    try {
+ 
+  
+  try {
 
-        const user_id = req.session.user_id;
-        const user = await User.findOne({_id:user_id});
-        
+      const user_id = req.session.user_id;
+      const user = await User.findOne({_id:user_id});
+      
 
 
-        if (!user) {
-            next();
-        }else{
-            if(user.is_blocked){
-                
-                console.log(user.is_blocked)
-                res.render('login');
-            }else{
-                next();
-            }
+      if (!user) {
+          next();
+      }else{
+          if(user.is_blocked){
+              res.render('login');
+          }else{
+              next();
+          }
 
-        }
-    } catch (error) {
-        console.log(error.message);
-    }
+      }
+  } catch (error) {
+      console.log(error.message);
+  }
 }
 
 
 
 module.exports = {
-    isLogin,
-    isLogout,
-    adminblock
+  isLogin,
+  isLogout,
+  adminblock
 }

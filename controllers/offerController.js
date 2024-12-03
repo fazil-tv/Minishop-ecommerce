@@ -75,7 +75,7 @@ const deletoffer = async (req, res) => {
 
 const applyoffer = async (req, res) => {
     try {
-        console.log("heeey");
+      
 
         const offerID = req.body.offerId
         const Id = req.body.productId
@@ -86,7 +86,7 @@ const applyoffer = async (req, res) => {
             { $set: {offer: offerId,discountedPrice:0} },
             { new: true }
         );
-        console.log(product)
+       
         res.json({ status: true })
     } catch (error) {
         console.log(error);
@@ -96,18 +96,17 @@ const applyoffer = async (req, res) => {
 
 const removeoffer = async (req, res) => {
     try {
-        console.log("heeey");
+      
 
      
         const Id = req.body.productId
-       
-        console.log(Id)
+     
         const product = await productSchema.findOneAndUpdate(
             { _id: Id },
             { $unset: {offer:1,discountedPrice:1} },
             { new: true }
         );
-        console.log(product)
+      
         res.json({ status: true })
     } catch (error) {
         console.log(error);
@@ -120,14 +119,14 @@ const applycategoryoffer  = async (req,res)=>{
         const offerId = req.body.offerId;
         const categoryId = req.body.categoryId;
 
-        console.log(offerId)
+       
 
         const category = await categorySchema.findOneAndUpdate(
             { _id: categoryId },
             { $set: {offer: offerId } },
             { new: true }
         );
-        console.log(category)
+   
 
         res.json({ status: true })
 
@@ -144,7 +143,7 @@ const removecategoryoffer  = async (req,res)=>{
         const categoryId = req.body.categoryId;
        
 
-        console.log(categoryId)
+      
 
         const category = await categorySchema.findOneAndUpdate(
             { _id: categoryId },
