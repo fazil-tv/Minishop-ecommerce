@@ -1,9 +1,8 @@
 const User = require('../model/userSchema')
-
-
 const productSchema = require('../model/productSchema')
-
 const addressSchema = require('../model/addressModel');
+
+
 
 // add address
 const Postaddress = async (req, res) => {
@@ -38,8 +37,6 @@ const Postaddress = async (req, res) => {
     }
 
 }
-
-
 
 
 // edit address
@@ -88,8 +85,6 @@ const Deletaddress = async (req, res) => {
         res.status(500).render('500');
     }
 }
-
-
 
 
 

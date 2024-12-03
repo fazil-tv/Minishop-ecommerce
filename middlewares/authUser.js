@@ -25,7 +25,7 @@ const isLogout = (req, res, next) => {
     try {
         if (req.session.user_id) {
          
-            res.redirect('/indexhome');
+            res.redirect('/');
 
         } else {
           

@@ -32,7 +32,7 @@ const Signup = async (req, res) => {
 const Logout = async (req, res) => {
     try {
         req.session.admin_email = null;
-        res.redirect('/admin/login')
+        res.redirect('/admin')
 
     } catch (error) {
         console.log(error.message)
@@ -105,12 +105,12 @@ const AdminverifyLogin = async (req, res) => {
     }
 }
 
+
 const Loaddashbord = async (req, res) => {
-
     const totalproducts = await productSchema.countDocuments();
-    const totalorers = await orderSchema.countDocuments();
+    const totaloders = await orderSchema.countDocuments();
 
-    const revenue = await orderSchema.aggregate([
+    let revenue = await orderSchema.aggregate([
         {
             $unwind: "$products"
         },
@@ -122,6 +122,9 @@ const Loaddashbord = async (req, res) => {
         }
     ]);
 
+    
+  
+    const totalRevenue = revenue.length > 0 ? revenue[0].revenue : 0;
 
     const currentDate = new Date();
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -152,27 +155,39 @@ const Loaddashbord = async (req, res) => {
         }
     ]);
 
+   
     const graphValue = Array(12).fill(0);
 
-    montlyrevenue.forEach(entry => {
-        const monthIndex = entry._id - 1;
-        graphValue[monthIndex] = entry.monthlyrevenue;
-    });
+    if (Array.isArray(montlyrevenue) && montlyrevenue.length > 0) {
+        montlyrevenue.forEach(entry => {
+            const monthIndex = entry._id - 1; 
+            graphValue[monthIndex] = entry.monthlyrevenue;
+        });
+    }
 
-   
-    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" })
-    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" })
-    Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" })
+    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" });
+    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" });
+    const Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" });
 
     try {
-      
-        res.render("index", { totalproducts, totalorers, revenue: revenue[0].revenue, currentMonthName, montlyrevenue: montlyrevenue[0].monthlyrevenue, graphValue, Wallet, cashondelivery, Razorpay });
+        res.render("index", {
+            totalproducts,
+            totaloders,
+            revenue: totalRevenue, 
+            currentMonthName,
+            montlyrevenue: montlyrevenue.length > 0 ? montlyrevenue[0].monthlyrevenue : 0,
+            graphValue,
+            Wallet,
+            cashondelivery,
+            Razorpay
+        });
     } catch (error) {
         console.log(error);
     }
 }
 
-// loding admin dashbord
+
+
 const LoadUser = async (req, res) => {
     try {
         const usersData = await userModal.find({})
@@ -185,7 +200,7 @@ const LoadUser = async (req, res) => {
 }
 
 
-// block user
+
 const BlockUser = async (req, res) => {
 
     try {
@@ -198,7 +213,7 @@ const BlockUser = async (req, res) => {
     }
 };
 
-// unblock user
+
 const UnblockUser = async (req, res) => {
     try {
         const user = req.body.userId;
@@ -233,7 +248,7 @@ const Updatestatus = async (req, res) => {
 
 
 
-// sales
+
 const Sales = async (req, res) => {
     const startDate = req.body.startDate
     const endDate = req.body.endDate
