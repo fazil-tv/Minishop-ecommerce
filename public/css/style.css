@@ -15985,24 +15985,3 @@ textarea.form-control {
 
 
 
-
-
- @media (max-width:1207px){
-  .carttable{
-    overflow-y: scroll;
-  }
-  
-  
-
- }
-
-
-/* @media only screen and (min-width: 600px) {...}
-
-@media only screen and (min-width: 768px) {...}
-
-@media only screen and (min-width: 992px) {...}
-
-@media only screen and (min-width: 1200px) {...} */
-
-

@@ -98,11 +98,27 @@
                     </a>
                 </li>
 
-
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#">
+                        <i class="icon material-icons md-person"></i>
+                        <span class="text">Account</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-account-login.html">User login</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
+                    </div>
 
             </ul>
             <hr />
-
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
+            </ul>
             <br />
             <br />
         </nav>
@@ -146,14 +162,14 @@
                 </div>
             </div>
             <div class="card mb-4">
-
+                
                 <!-- card-header end// -->
 
                 <% if (cartData.length> 0){%>
 
 
-                    <div class="card-body usertable">
-                        <div class="">
+                    <div class="card-body">
+                        <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr class="text-center">
@@ -171,40 +187,43 @@
                                 <tbody class="text-center">
                                     <% for (let i=cartData.length-1; i>= 0; i--) { %>
 
-
-                                        <tr>
-                                            <td>
-                                                <b>
-                                                    <%=cartData.length-i%>
-                                                </b>
-                                            </td>
-                                            <td>
-                                                <%=cartData[i].orderId%>
-                                            </td>
-                                            <td>
-                                                <%= cartData[i].payment%>
-                                            </td>
-                                            <td>
-                                                <%=cartData[i].orderDate.toLocaleDateString('en-US', { weekday: 'short'
-                                                    , year: 'numeric' , month: 'short' , day: 'numeric' ,
-                                                    hour: 'numeric' , minute: 'numeric' })%>
-                                            </td>
-
-
-
-                                            <td>
-                                                <%= cartData[i].subtotal%>
-                                            </td>
+                                        <% console.log(cartData[i].products)%>
+                                            <tr>
+                                                <td>
+                                                    <b>
+                                                        <%=cartData.length-i%>
+                                                    </b>
+                                                </td>
+                                                <td>
+                                                    <%=cartData[i].orderId%>
+                                                </td>
+                                                <td>
+                                                    <%= cartData[i].payment%>
+                                                </td>
+                                                <td>
+                                                    <%=cartData[i].orderDate.toLocaleDateString('en-US', {
+                                                        weekday: 'short' , year: 'numeric' , month: 'short' ,
+                                                        day: 'numeric'  ,
+                                    
+                                                        hour: 'numeric',
+                                                        minute: 'numeric' })%>
+                                                </td>
 
 
-                                            <td class="text-end">
-                                                <a href="orderdetailes?id=<%=cartData[i]._id%>"
-                                                    class="btn btn-md rounded font-sm">Detail</a>
 
-                                            </td>
+                                                <td>
+                                                    <%= cartData[i].subtotal%>
+                                                </td>
 
-                                        </tr>
-                                        <%}%>
+
+                                                            <td class="text-end">
+                                                                <a href="orderdetailes?id=<%=cartData[i]._id%>"
+                                                                    class="btn btn-md rounded font-sm">Detail</a>
+
+                                                            </td>
+
+                                            </tr>
+                                            <%}%>
 
 
 
@@ -232,21 +251,21 @@
             <div class="row mt-5 ">
                 <div class="col text-center">
                     <div class="block-27">
-                        <div class="pagination-area mt-15 mb-50">
-                            <nav aria-label="Page navigation example">
-                                <% if (cartData.length !==0) { %>
-                                    <ul class="pagination justify-content-center">
-                                        <% for (let i=1; i <=totalDoc / 3; i++) { %>
-                                            <li class="page-item <%= page == i ? 'active' : '' %>">
-                                                <a class="page-link" href="/admin/orders?page=<%= i %>">
-                                                    <%= i %>
-                                                </a>
-                                            </li>
+                            <div class="pagination-area mt-15 mb-50">
+                                <nav aria-label="Page navigation example">
+                                    <% if (cartData.length !== 0) { %>
+                                        <ul class="pagination justify-content-center">
+                                            <% for (let i = 1; i <= totalDoc / 3; i++) { %>
+                                                <li class="page-item <%= page == i ? 'active' : '' %>">
+                                                    <a class="page-link" href="/admin/orders?page=<%= i %>">
+                                                        <%= i %>
+                                                    </a>
+                                                </li>
                                             <% } %>
-                                    </ul>
+                                        </ul>
                                     <% } %>
-                            </nav>
-                        </div>
+                                </nav>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -281,9 +300,6 @@
     <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-
-    <script src="/assets/js/main.js?v=1.1" type="text/javascript"></script>
-
 </body>
 
 </html>

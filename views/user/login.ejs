@@ -149,6 +149,7 @@
 	</div>
 
 
+	<!-- VALIDATION -->
 	<script>
 		  setTimeout(() => {
       var messageElement = document.getElementById('message');
@@ -176,21 +177,21 @@
 				return emailPattern.test(email);
 			}
 
-		
+			// Validation
 			if (!email.trim()) {
-				
+				// Empty email case
 				document.getElementById('emailField').style.display = 'block';
 				console.log('Email cannot be empty');
 				isValid = false;
 			} else if (!emailevalidator(email)) {
-				
+				// Invalid email case
 				document.getElementById('emailField').style.display = 'block';
 				console.log(`${email} is not a valid email address`);
 				isValid = false;
 			} else {
 				console.log(`${email} is a valid email address`);
 			}
-		
+			// Validation
 			if (!password.trim()) {
 				document.getElementById('passwordField').style.display = 'block';
 				isvalid = false;
@@ -202,7 +203,7 @@
 			else {
 				console.log("wrong message");
 			}
-			
+			// Submit the form if validation passes
 			document.getElementById('myForm').submit();
 		}
 

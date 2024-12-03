@@ -10,18 +10,22 @@ require('dotenv').config();
 const PORT = process.env.PORT
 
 
-
+//session management
 app.use(session({
     secret:config.sessionSecretKey,
     saveUninitialized: true,
     resave: false
   }))
 
+//using morgan middleware for logging HTTp requests
+// app.use(morgan('dev'));
 
+
+//connect to mongodb 
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGOURL);
 
-
+//check
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', () =>console.log('Connected to the database!'));
@@ -52,4 +56,4 @@ app.use((req, res,next) => {
 });
 
 
-app.listen(PORT,()=>console.log("server started http://localhost:3000"));
+app.listen(PORT,()=>console.log("server started http://localhost:5000"));

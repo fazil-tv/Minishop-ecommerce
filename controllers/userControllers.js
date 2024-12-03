@@ -205,7 +205,7 @@ let sendEmails = async (email, _id) => {
 const sendmailUser = async (email, id, res) => {
     try {
         await sendEmails(email, id);
-       
+        console.log(id);
         console.log("Email sent successfully");
         res.redirect(`/otp`);
     } catch (error) {
@@ -214,7 +214,7 @@ const sendmailUser = async (email, id, res) => {
     }
 };
 
-  
+
 
 
 //resend otp
@@ -248,12 +248,15 @@ const resendEmails = async (email, _id) => {
 const resendmailUser = async (userId, res) => {
 
     try {
-        
+        console.log("hiiiii");
+        console.log(userId);
         const user = await User.findOne({ _id: userId });
+        console.log(user);
         const email = user.email;
+        console.log("email", email);
         await resendEmails(email, userId);
 
-     
+        console.log("last user", userId)
         console.log(" resent otp successfully");
         res.status(200).json({ success: true });
     } catch (error) {
@@ -275,10 +278,12 @@ const verifyPost = async (req, res) => {
         const user = await User.findOne({ _id: userId });
         const email = user.email;
 
-        
+        console.log("1st email", email);
+
+        console.log("Session ID:", userId);
 
         const userOTPVerificationrecord = await Otp.find({ user_id: userId })
-     
+        console.log(userOTPVerificationrecord);
 
         if (userOTPVerificationrecord.length == 0) {
             res.render('otp', { message: "record doesn't exist or has been verified already" })
@@ -291,12 +296,15 @@ const verifyPost = async (req, res) => {
 
             if (!validOTP) {
                 console.log("invalid otp");
-                
+                // res.render('otp',{message:'invalid otp',userId});
+                console.log("this", email);
+                console.log("this", userId);
+                // const email = userId.email;
                 res.render('otp', { message: 'invalid otp', userId, email });
             } else {
 
                 await Otp.deleteOne({ user_id: userId });
-            
+                console.log("ok da kitty")
                 res.redirect(`/`);
 
             }
@@ -337,6 +345,14 @@ const indexhome = async (req, res) => {
         const Wishlist = await wishlistSchema.findOne({ user: req.session.user_id });
 
         const categoryData = await categorySchema.find({});
+        console.log(product, "productssssss");
+        console.log(Wishlist, 'kdfksdfk')
+
+
+        console.log(Wishlist, "^^^^^^okkk")
+
+
+
         res.render("indexhome", { user: req.session.user_id, product: product, bannerData, Wishlist, categoryData });
     } catch (error) {
         console.log(error.message);
@@ -346,10 +362,17 @@ const indexhome = async (req, res) => {
 
 // logout
 const userLogout = async (req, res) => {
-
+    console.log("jkl")
     try {
-        req.session.user_id = null;
-        res.redirect('/signup');
+        req.session.destroy((err) => {
+            if (err) {
+                console.log("Error destroying session:", err.message);
+            } else {
+                console.log("Session destroyed");
+
+                res.redirect('/signup');
+            }
+        });
     } catch (error) {
         console.log(error.message);
     }
@@ -359,13 +382,31 @@ const userLogout = async (req, res) => {
 const shop = async (req, res) => {
     try {
         const category = await categorySchema.find({});
+        console.log(category)
+
         const Wishlist = await wishlistSchema.findOne({ user: req.session.user_id });
         const searchQuery = req.query.search || "";
         const page = req.query.page ? req.query.page : 1;
         const prevPage = page - 1;
         const totalDoc = await productSchema.countDocuments();
-        const product = await productSchema.find({}).populate('category').populate('offer').skip(prevPage * 4).limit(6)    
+        const product = await productSchema.find({}).populate('category').populate('offer').skip(prevPage * 4).limit(6)
+
+
+
+        console.log(totalDoc);
         res.render("shop", { product: product, category: category, searchQuery, page, totalDoc, Wishlist });
+
+        // const category = await categorySchema.find({}).sort({ name: 1 })
+        // console.log(category)
+
+        // const searchQuery = req.query.search || "";
+        // const page = req.query.page ? req.query.page : 1;
+        // const totalDoc = await productSchema.countDocuments();
+        // const prevPage = page - 1;
+
+        // const product = await productSchema.find({}).populate('category').
+        //     res.render("shop", { product: product, category: category, searchQuery }).skip(prevPage * 4).limit(4)
+
 
 
     } catch (error) {
@@ -377,9 +418,12 @@ const shop = async (req, res) => {
 const singleproduct = async (req, res) => {
     try {
         const productId = req.query.id;
+        console.log(productId);
         const product = await productSchema.findOne({ _id: productId }).populate('category').populate('offer');
+        console.log(product);
 
         const cartdata = await cartSchema.findOne({ user: req.session.user_id })
+        console.log(cartdata)
 
         res.render("singleproduct", { product, user: req.session.user_id, cartdata });
     } catch (error) {
@@ -415,6 +459,12 @@ const useraccount = async (req, res) => {
             }
         );
 
+
+
+
+        console.log(invoice, "orders,$$$$$$$$$$$$$$$$$$$$")
+
+
         const user = await User.findById(userId);
 
         res.render('useraccount', { user, useraddress, orders, invoice });
@@ -431,7 +481,7 @@ const useraccount = async (req, res) => {
 const verifyLogin = async (req, res) => {
 
     try {
-      
+        console.log('verify')
         const email = req.body.email;
         const password = req.body.password;
         const userData = await User.findOne({ email: email });
@@ -461,13 +511,15 @@ const verifyLogin = async (req, res) => {
 
 const edituser = async (req, res) => {
     try {
-  
+        console.log("heee")
         userData = await User.findById(req.session.user_id);
-
+        console.log(userData);
 
         const fullname = req.body.fullname;
         const mobile = req.body.mobile;
 
+        console.log(fullname);
+        console.log(mobile);
         const updatedUserData = await User.findOneAndUpdate(
 
             { email: userData.email },
@@ -480,9 +532,11 @@ const edituser = async (req, res) => {
             { new: true }
         );
 
+        console.log(updatedUserData.fullname);
+        console.log(updatedUserData.mobile);
 
         res.json({ success: true });
-    
+        // res.redirect('/useraccount')
 
     } catch (err) {
         console.log(err);
@@ -492,32 +546,44 @@ const edituser = async (req, res) => {
 }
 
 
+// securePassword
 
+// const securePassword = async (password) => {
+//     try {
+
+//         return securePass;
+//     } catch (error) {
+//         console.log(error.message)
+//     }
 // }
 
 const resetpassword = async (req, res) => {
     try {
         const { newpassword, currentpassword, repeatpassword } = req.body;
-       
+        console.log("am here");
+
+        console.log(currentpassword);
+        console.log(repeatpassword);
+        console.log(newpassword);
 
 
         if (newpassword == repeatpassword) {
 
             userData = await User.findById(req.session.user_id);
-          
+            console.log(userData);
             const passwordMatch = await bcrypt.compare(currentpassword, userData.password);
-        
+            console.log(passwordMatch);
             const email = userData.email;
-   
+            console.log(email)
 
             if (!passwordMatch) {
                 return res.json({ reseted: false });
             }
             else {
-              
+                // const hashedPassword = await securePassword(Password)
                 const hashedPassword = await bcrypt.hash(newpassword, 10);
                 const hashedconfirmPassword = await bcrypt.hash(repeatpassword, 10);
-          
+                console.log(hashedPassword);
                 await User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword, confirmPassword: hashedconfirmPassword } });
             }
         }
@@ -556,6 +622,8 @@ const forgotpassword = async (req, res) => {
 
 const forgototp = async (req, res) => {
     try {
+
+
         res.render("forgototp");
     } catch (error) {
         console.error("Error in forgototp:", error.message);
@@ -567,17 +635,24 @@ const forgototp = async (req, res) => {
 
 
 const getemail = async (req, res) => {
-
+    console.log("hi");
     try {
         req.session.forget_email = req.body.email;
-     
+        console.log(req.body.email);
+        console.log("kkki");
 
         const userData = await User.findOne({ email: req.body.email });
+        console.log(userData);
 
+        console.log("ioio");
         const userId = userData._id;
         const email = userData.email;
         req.session.user_id = userId;
 
+
+
+        console.log(userId);
+        console.log(email);
 
         if (userData) {
 
@@ -586,13 +661,16 @@ const getemail = async (req, res) => {
             const userData = await User.findOne({ email: mail });
             const usrid = userData._id;
 
+            console.log(usrid)
 
             res.render('forgototp', { usrid, mail });
         } else {
             res.render('getemail', { error: 'Email not found' });
         }
     } catch (error) {
-       
+        // console.error("Error in getemail:", error.message);
+        // res.status(500).send("Internal Server Error");
+        // res.render("getemail");
         res.render('forgotpassword', { message: 'No users found' });
     }
 }
@@ -628,7 +706,7 @@ const verifysendEmails = async (email, _id) => {
 const verifysendmail = async (email, id, res) => {
     try {
         await sendEmails(email, id);
-  
+        console.log(id);
         console.log("Email sent successfully");
     }
     catch (error) {
@@ -641,10 +719,11 @@ const verifysendmail = async (email, id, res) => {
 const otpverification = async (req, res) => {
 
     try {
-       
+        console.log("meow");
+        console.log("jkl");
         const { num1, num2, num3, num4 } = req.body;
         const otp = `${num1}${num2}${num3}${num4}`;
-       
+        console.log(otp, "otp");
 
 
 
@@ -652,29 +731,41 @@ const otpverification = async (req, res) => {
         const user = await User.findOne({ _id: userId });
         const email = user.email;
 
+
+
+        console.log(userId);
+        console.log(user);
+        console.log(email);
         req.session.email_id = email;
 
         const userOTPVerificationrecord = await Otp.find({ user_id: userId })
+        console.log(userOTPVerificationrecord);
 
 
         const hashedOTP = userOTPVerificationrecord[0].otp;
         const validOTP = await bcrypt.compare(otp, hashedOTP);
-      
+        console.log(validOTP);
+        console.log(hashedOTP);
 
         if (!validOTP) {
-          
+            console.log("invalid otp");
+            console.log("this", email);
+            console.log("this", userId);
 
             return res.json({ success: false, message: 'invalid otp' });
 
+
+            // res.render('forgototp', { message: 'invalid otp', userId, email });
         } else {
+            console.log("hmmmmm")
             if (req.session.user_id) {
-          
+                // res.render('changepasswordform')
                 return res.json({ success: true, message: 'done' });
             } else {
                 const userId = req.session.user_id;
                 const user = await User.findOne({ _id: userId });
                 if (user) {
-           
+                    // res.render('changepasswordform');
                     return res.json({ success: true, message: 'done' });
                 }
             }
@@ -700,10 +791,10 @@ const changepasswordform = async (req, res) => {
 
 const changepassword = async (req, res) => {
     try {
-    
+        console.log("hrhr")
         if (req.session.user_id) {
             const userId = req.session.user_id;
-        
+            console.log(userId);
             const sPassword = await bcrypt.hash(req.body.newpassword, 10);
             await User.findOneAndUpdate({ _id: userId }, { $set: { password: sPassword } })
 
@@ -717,8 +808,10 @@ const changepassword = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
+
+
 
 }
 
@@ -740,17 +833,15 @@ const invoice = async (req, res) => {
             }
         });
 
-   
+        console.log("totelorders",totelorders)
 
-        const orders = totelorders.products.filter((val) => val.productstatus === 'Delivered' || val.productstatus === 'return');
+        const orders = totelorders.products.filter((val) => val.productstatus === 'Delivered');
 
-
-       
-
-
-        
+        console.log("orders", orders)
+        console.log("totelorders", totelorders)
 
         const deliveryAddressObjectId = new mongoose.Types.ObjectId(totelorders.delivery_address);
+        console.log(deliveryAddressObjectId, 'jkjk')
         const userAddress = await addressSchema.findOne(
             { 'address._id': deliveryAddressObjectId },
             { 'address.$': 1 }

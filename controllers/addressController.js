@@ -1,11 +1,12 @@
 const User = require('../model/userSchema')
+
+
 const productSchema = require('../model/productSchema')
+
 const addressSchema = require('../model/addressModel');
 
-
-
 // add address
-const Postaddress = async (req, res) => {
+const adaddress = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const data = {
@@ -39,29 +40,31 @@ const Postaddress = async (req, res) => {
 }
 
 
+
+
 // edit address
 
-const Patchaddress = async (req, res) => {
+const editaddress = async (req, res) => {
 
-    try {
-        const { fullname, email, state, pin, mobile, city, houseName, addressId } = req.body;
+    try {    
+        const {fullname, email, state, pin, mobile, city, houseName, addressId } = req.body;
         const userId = req.session.user_id;
         console.log(userId);
-        console.log("editaddressID", addressId);
-        console.log("editfullname", fullname);
+        console.log("editaddressID",addressId);
+        console.log("editfullname",fullname);
 
-        await addressSchema.updateOne({ user: userId, 'address._id': addressId }, {
-            $set: {
-                'address.$.fullname': fullname,
-                'address.$.email': email,
-                'address.$.mobile': mobile,
-                'address.$.state': state,
-                'address.$.pin': pin,
-                'address.$.city': city,
+        await addressSchema.updateOne({user:userId,'address._id':addressId},{
+            $set:{
+                'address.$.fullname':fullname,
+                'address.$.email':email,
+                'address.$.mobile':mobile,
+                'address.$.state':state,
+                'address.$.pin':pin,
+                'address.$.city':city,
                 'address.$.houseName': houseName,
             }
         })
-        res.json({ add: true })
+        res.json({status:"editaddress success",editaddress})
     } catch (error) {
         res.status(500).render('500');
 
@@ -69,19 +72,17 @@ const Patchaddress = async (req, res) => {
 
 }
 
-const Deletaddress = async (req, res) => {
-
+const deletaddress = async (req,res)=>{
+    console.log("ok ok brooo");
     try {
         const userId = req.session.user_id;
-        const addressId = req.body.addressId;
-        console.log("where", userId);
-        console.log("where adderssId", addressId);
-        const data = await addressSchema.updateOne({ user: userId }, { $pull: { address: { _id: addressId } } })
+        const addressId= req.body.addressId;
+        console.log("where",userId);
+        console.log("where adderssId",addressId);
+        await addressSchema.updateOne({user:userId},{$pull:{address:{_id:addressId}}})
+        res.json({add:true});
 
-        res.json({ add: true })
-
-
-    } catch (eror) {
+    } catch (error) {
         res.status(500).render('500');
     }
 }
@@ -89,8 +90,8 @@ const Deletaddress = async (req, res) => {
 
 
 module.exports = {
-    Postaddress,
-    Patchaddress,
-    Deletaddress
+    adaddress,
+    editaddress,
+    deletaddress
 
 }

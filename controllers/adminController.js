@@ -19,7 +19,7 @@ const ExcelJS = require('exceljs');
 
 
 // signup
-const Signup = async (req, res) => {
+const signup = async (req, res) => {
     try {
         res.render("login");
     } catch (error) {
@@ -29,10 +29,10 @@ const Signup = async (req, res) => {
 
 
 //logout
-const Logout = async (req, res) => {
+const logout = async (req, res) => {
     try {
         req.session.admin_email = null;
-        res.redirect('/admin')
+        res.redirect('/admin/login')
 
     } catch (error) {
         console.log(error.message)
@@ -45,7 +45,7 @@ const Logout = async (req, res) => {
 
 
 // users
-const Users = async (req, res) => {
+const users = async (req, res) => {
     try {
         res.render("users");
     } catch (error) {
@@ -54,12 +54,24 @@ const Users = async (req, res) => {
 }
 
 // users
-const Orders = async (req, res) => {
+const orders = async (req, res) => {
     try {
-        const page = req.query.page ? req.query.page : 1; 
+
+
+
+        const page = req.query.page ? req.query.page : 1;
         const prevPage = page - 1;
+
+
+        console.log(page, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
         const totalDoc = await orderSchema.countDocuments();
         const cartData = await orderSchema.find({}).populate('products.productId').skip(prevPage * 4).limit(6);
+
+        // const id = 1000;
+        // const orderId = await orderSchema.countDocuments() + id;
+        console.log(cartData, 'hghfg');
+        console.log(totalDoc, 'hghfg%%%%%%');
         res.render("orders", { cartData, totalDoc, page });
     } catch (error) {
         console.log(error.message);
@@ -68,23 +80,41 @@ const Orders = async (req, res) => {
 
 
 // Order detail
-const Orderdetaile = async (req, res) => {
+const orderdetaile = async (req, res) => {
     try {
         const id = req.query.id;
+
+
         const orders = await orderSchema.findOne({ _id: id }).populate('products.productId');
+
+        console.log(orders);
         const deliveryAddressObjectId = new mongoose.Types.ObjectId(orders.delivery_address);
+        console.log(deliveryAddressObjectId);
         const userAddress = await addressSchema.find(
             { 'address._id': deliveryAddressObjectId },
             { 'address.$': 1 }
         );
+        console.log(userAddress, "userAddress");
+
+
         res.render("detaile", { userAddress, orders });
     } catch (error) {
         console.log(error.message);
     }
 }
 
+
+
+
+
+
+
+
+
+
+
 //admin password verification
-const AdminverifyLogin = async (req, res) => {
+const adminverifyLogin = async (req, res) => {
 
     try {
         const email = process.env.ADMIN_EMAIL;
@@ -105,12 +135,16 @@ const AdminverifyLogin = async (req, res) => {
     }
 }
 
+const loaddashbord = async (req, res) => {
 
-const Loaddashbord = async (req, res) => {
     const totalproducts = await productSchema.countDocuments();
-    const totaloders = await orderSchema.countDocuments();
 
-    let revenue = await orderSchema.aggregate([
+    console.log(totalproducts, "%%%%%%okd")
+
+
+    const totalorers = await orderSchema.countDocuments();
+
+    const revenue = await orderSchema.aggregate([
         {
             $unwind: "$products"
         },
@@ -122,9 +156,6 @@ const Loaddashbord = async (req, res) => {
         }
     ]);
 
-    
-  
-    const totalRevenue = revenue.length > 0 ? revenue[0].revenue : 0;
 
     const currentDate = new Date();
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -136,6 +167,26 @@ const Loaddashbord = async (req, res) => {
     endOfMonth.setHours(23);
 
     const currentMonthName = new Date().toLocaleString('default', { month: 'long' });
+
+
+    // const montlyrevenue = await orderSchema.aggregate([
+    //     {
+    //         $unwind: "$products"
+    //     },
+    //     {
+    //         $match: {
+    //             "orderDate": { $gte: startOfMonth, $lt: endOfMonth }
+    //         }
+    //     },
+    //     {
+    //         $group: {
+    //             _id: null,
+    //             monthlyrevenue: {
+    //                 $sum: "$products.totalPrice"
+    //             }
+    //         }
+    //     }
+    // ]);
     const montlyrevenue = await orderSchema.aggregate([
         {
             $match: {
@@ -155,43 +206,37 @@ const Loaddashbord = async (req, res) => {
         }
     ]);
 
-   
+
+    console.log("monthly revenue", montlyrevenue);
+
     const graphValue = Array(12).fill(0);
 
-    if (Array.isArray(montlyrevenue) && montlyrevenue.length > 0) {
-        montlyrevenue.forEach(entry => {
-            const monthIndex = entry._id - 1; 
-            graphValue[monthIndex] = entry.monthlyrevenue;
-        });
-    }
+    montlyrevenue.forEach(entry => {
+        const monthIndex = entry._id - 1;
+        graphValue[monthIndex] = entry.monthlyrevenue;
+    });
 
-    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" });
-    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" });
-    const Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" });
+    console.log(graphValue, "ooooor");
+
+    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" })
+    console.log("TOTTEL", cashondelivery)
+    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" })
+    console.log("TOTTEL", cashondelivery)
+    Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" })
 
     try {
-        res.render("index", {
-            totalproducts,
-            totaloders,
-            revenue: totalRevenue, 
-            currentMonthName,
-            montlyrevenue: montlyrevenue.length > 0 ? montlyrevenue[0].monthlyrevenue : 0,
-            graphValue,
-            Wallet,
-            cashondelivery,
-            Razorpay
-        });
+        console.log("t", totalproducts, "or", totalorers, "re", revenue, "cur", currentMonthName, "mo", montlyrevenue)
+        res.render("index", { totalproducts, totalorers, revenue: revenue[0].revenue, currentMonthName, montlyrevenue: montlyrevenue[0].monthlyrevenue, graphValue, Wallet, cashondelivery, Razorpay });
     } catch (error) {
         console.log(error);
     }
 }
 
-
-
-const LoadUser = async (req, res) => {
+// loding admin dashbord
+const loadUser = async (req, res) => {
     try {
         const usersData = await userModal.find({})
-     
+        console.log(usersData);
         res.render("users", { usersData });
     } catch (error) {
         console.log(error);
@@ -200,12 +245,12 @@ const LoadUser = async (req, res) => {
 }
 
 
-
-const BlockUser = async (req, res) => {
+// block user
+const blockUser = async (req, res) => {
 
     try {
         const userId = req.body.userId;
-  
+        console.log(userId)
         await userModal.updateOne({ _id: userId }, { $set: { is_blocked: true } });
         res.status(200).json({ message: 'User blocked successfully' });
     } catch (error) {
@@ -213,8 +258,8 @@ const BlockUser = async (req, res) => {
     }
 };
 
-
-const UnblockUser = async (req, res) => {
+// unblock user
+const unblockUser = async (req, res) => {
     try {
         const user = req.body.userId;
         await userModal.updateOne({ _id: user }, { $set: { is_blocked: false } });
@@ -225,13 +270,15 @@ const UnblockUser = async (req, res) => {
 };
 
 
-const Updatestatus = async (req, res) => {
+const updatestatus = async (req, res) => {
     try {
         const orderId = req.body.orderId;
         const productId = req.body.productId;
         const newstatus = req.body.newstatus;
 
-      
+        console.log("newstatus ", newstatus);
+        console.log("orderId", orderId);
+        console.log(" productId ", productId)
 
         const order = await orderSchema.findOne({ _id: orderId });
         const index = order.products.findIndex((item) => {
@@ -248,18 +295,21 @@ const Updatestatus = async (req, res) => {
 
 
 
-
-const Sales = async (req, res) => {
+// sales
+const sales = async (req, res) => {
     const startDate = req.body.startDate
     const endDate = req.body.endDate
-  
+    console.log(startDate);
+    console.log(endDate);
 
     const selectedvalue = req.body.selectedvalue;
- 
+    console.log(selectedvalue);
 
     try {
 
         if (selectedvalue === "Daily") {
+
+            console.log("dailyyyyy");
             const orderData = await orderSchema.aggregate([
                 {
                     $match: {
@@ -303,11 +353,14 @@ const Sales = async (req, res) => {
                 }
             ]);
 
+
+            console.log(orderData, "11111111");
+
             res.json({ orderData })
 
 
         } else if (selectedvalue === "Weekly") {
-      
+            console.log("wekleeeee");
             const orderData = await orderSchema.aggregate([
                 {
                     $match: {
@@ -353,7 +406,7 @@ const Sales = async (req, res) => {
             res.json({ orderData })
 
         } else if (selectedvalue === "Monthly") {
-       
+            console.log("montlyyyyy");
             const orderData = await orderSchema.aggregate([
                 {
                     $match: {
@@ -393,8 +446,13 @@ const Sales = async (req, res) => {
 
             res.json({ orderData })
 
+
+
+
+
+
         } else if (selectedvalue === "Yearly") {
-         
+            console.log("yearlyyyyy");
             const orderData = await orderSchema.aggregate([
                 {
                     $match: {
@@ -463,6 +521,7 @@ const Sales = async (req, res) => {
                 }
             ]);
 
+            console.log('oooooooooo', orderData);
             res.json({ orderData })
 
 
@@ -498,6 +557,7 @@ const Sales = async (req, res) => {
                 }
             ]);
 
+            console.log('oooooooooo', orderData);
             res.json({ orderData })
 
 
@@ -542,7 +602,7 @@ const Sales = async (req, res) => {
 }
 
 
-const Salesreport = async (req, res) => {
+const salesreport = async (req, res) => {
 
     const orderDatas = await orderSchema.aggregate([
         {
@@ -573,16 +633,28 @@ const Salesreport = async (req, res) => {
 
 
 
+    console.log(orderDatas, "OOOOOI");
     const selectedformat = req.body.selectedformat;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
 
+    console.log(startDate)
+    console.log(endDate)
+
+
+
+
+
+    console.log(selectedformat, "hoiiiiiii")
+
+
     if (selectedformat === "PDF") {
 
         try {
+            // const orderData = req.body.datas
             const orderData = req.body.datas !== undefined && req.body.datas.length !== 0 ? req.body.datas : orderDatas;
 
-      
+            console.log("orderData", orderData)
 
             const ejsPagePath = path.join(__dirname, '../views/admin/report.ejs');
             const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
@@ -611,7 +683,7 @@ const Salesreport = async (req, res) => {
 
             worksheet.addRow(["NO", "ID", "PRODUCT NAME", "QUANTITY SOLD", "PRICE", "TOTTEL SALES", "ORDER DATE", "CUSTOMER", "PAYMENT METHODE"]);
 
-            
+            console.log(orderData, "*********");
 
             orderData.forEach((order, index) => {
                 worksheet.addRow([
@@ -654,17 +726,17 @@ const Salesreport = async (req, res) => {
 
 
 module.exports = {
-    AdminverifyLogin,
-    Signup,
-    LoadUser,
-    Users,
-    Loaddashbord,
-    BlockUser,
-    UnblockUser,
-    Logout,
-    Orders, 
-    Orderdetaile,
-    Updatestatus,
-    Sales,
-    Salesreport
+    adminverifyLogin,
+    signup,
+    loadUser,
+    users,
+    loaddashbord,
+    blockUser,
+    unblockUser,
+    logout,
+    orders, 
+    orderdetaile,
+    updatestatus,
+    sales,
+    salesreport
 }

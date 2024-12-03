@@ -1,7 +1,13 @@
 function changeProductStatus(orderId, productId) {
-   
+    console.log('ethiiii');
     const statusElementId = `${orderId}${productId}`;
     const newstatus = document.getElementById(statusElementId).value;
+
+
+
+    // const newstatus = document.getElementById("newstatus").value
+    console.log(orderId, productId, newstatus);
+
 
     try {
         fetch('/admin/updatestatus', {
@@ -47,7 +53,7 @@ function changeProductStatus(orderId, productId) {
 
 function cancelorder(x) {
     const orderId = x;
-   
+    console.log(orderId);
     fetch('/orderstatus', {
         method: 'DELETE',
         headers: {
@@ -140,10 +146,15 @@ function addwishlist() {
 
 function applyfilter() {
     const selectedvalue = document.getElementById("selectoption").value;
+    console.log(selectedvalue);
 
 
     const startDate = document.getElementById("startDate").value
     const endDate = document.getElementById("endDate").value
+
+    console.log(startDate)
+    console.log(endDate)
+
 
     try {
         fetch('/admin/salesfilter', {
@@ -161,7 +172,7 @@ function applyfilter() {
         })
             .then(response => response.json())
             .then(data => {
-               
+                console.log(data.totalDoc,data.page)
                 if (data && data.orderData) {
 
                     const tableBody = document.getElementById('table-body');
