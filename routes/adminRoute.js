@@ -20,8 +20,8 @@ adminRoute.set('view engine', 'ejs');
 adminRoute.set('views', './views/admin')
 
 
-adminRoute.get("/login", auth.isLogout, adminController.signup);
-adminRoute.post('/login', auth.isLogout, adminController.adminverifyLogin);
+adminRoute.get("/", auth.isLogout, adminController.Signup);
+adminRoute.post('/', auth.isLogout, adminController.AdminverifyLogin);
 
 adminRoute.get("/users", auth.isLogin, adminController.loadUser);
 adminRoute.get("/index", auth.isLogin, adminController.loaddashbord);

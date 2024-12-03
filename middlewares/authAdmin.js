@@ -3,14 +3,15 @@ const isLogin = async (req, res, next) => {
 
     try {
         if (req.session.admin_email) {
+            
             next();
         } else {
-            res.redirect('/admin/index');
+            res.redirect('/admin');
         }
 
     } catch (error) {
         console.log(error);
-        res.redirect('/admin/login');
+        res.redirect('/admin');
     }
 
 
@@ -22,7 +23,7 @@ const isLogout = async (req, res, next) => {
     try {
 
         if (req.session.admin_email) {
-            res.redirect('/admin/login');
+            res.redirect('/admin');
         } else {
             next();
         }

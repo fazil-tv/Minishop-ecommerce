@@ -108,28 +108,11 @@
                     </a>
                 </li>
 
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#">
-                        <i class="icon material-icons md-person"></i>
-                        <span class="text">Account</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div>
-                </li>
+            
 
             </ul>
             <hr />
-            <ul class="menu-aside">
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html">
-                        <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
-            </ul>
+           
             <br />
             <br />
         </nav>
@@ -195,7 +178,7 @@
                             <div class="text">
                                 <h6 class="mb-1 card-title">Orders</h6>
                                 <span>
-                                    <%=totalorers %>
+                                    <%=totaloders %>
                                 </span>
                             </div>
                         </article>
@@ -289,7 +272,7 @@
             if ($('#myChart').length) {
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var chart = new Chart(ctx, {
-                    // The type of chart we want to create
+                    
                     type: 'line',
 
                     // The data for our dataset

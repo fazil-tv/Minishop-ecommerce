@@ -32,7 +32,7 @@ const signup = async (req, res) => {
 const logout = async (req, res) => {
     try {
         req.session.admin_email = null;
-        res.redirect('/admin/login')
+        res.redirect('/admin')
 
     } catch (error) {
         console.log(error.message)
@@ -135,16 +135,12 @@ const adminverifyLogin = async (req, res) => {
     }
 }
 
-const loaddashbord = async (req, res) => {
 
+const Loaddashbord = async (req, res) => {
     const totalproducts = await productSchema.countDocuments();
+    const totaloders = await orderSchema.countDocuments();
 
-    console.log(totalproducts, "%%%%%%okd")
-
-
-    const totalorers = await orderSchema.countDocuments();
-
-    const revenue = await orderSchema.aggregate([
+    let revenue = await orderSchema.aggregate([
         {
             $unwind: "$products"
         },
@@ -156,6 +152,9 @@ const loaddashbord = async (req, res) => {
         }
     ]);
 
+    
+  
+    const totalRevenue = revenue.length > 0 ? revenue[0].revenue : 0;
 
     const currentDate = new Date();
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -206,34 +205,40 @@ const loaddashbord = async (req, res) => {
         }
     ]);
 
-
-    console.log("monthly revenue", montlyrevenue);
-
+   
     const graphValue = Array(12).fill(0);
 
-    montlyrevenue.forEach(entry => {
-        const monthIndex = entry._id - 1;
-        graphValue[monthIndex] = entry.monthlyrevenue;
-    });
+    if (Array.isArray(montlyrevenue) && montlyrevenue.length > 0) {
+        montlyrevenue.forEach(entry => {
+            const monthIndex = entry._id - 1; 
+            graphValue[monthIndex] = entry.monthlyrevenue;
+        });
+    }
 
-    console.log(graphValue, "ooooor");
-
-    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" })
-    console.log("TOTTEL", cashondelivery)
-    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" })
-    console.log("TOTTEL", cashondelivery)
-    Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" })
+    const cashondelivery = await orderSchema.countDocuments({ "payment": "Cash on delivery" });
+    const Wallet = await orderSchema.countDocuments({ "payment": "Wallet" });
+    const Razorpay = await orderSchema.countDocuments({ "payment": "Razorpay" });
 
     try {
-        console.log("t", totalproducts, "or", totalorers, "re", revenue, "cur", currentMonthName, "mo", montlyrevenue)
-        res.render("index", { totalproducts, totalorers, revenue: revenue[0].revenue, currentMonthName, montlyrevenue: montlyrevenue[0].monthlyrevenue, graphValue, Wallet, cashondelivery, Razorpay });
+        res.render("index", {
+            totalproducts,
+            totaloders,
+            revenue: totalRevenue, 
+            currentMonthName,
+            montlyrevenue: montlyrevenue.length > 0 ? montlyrevenue[0].monthlyrevenue : 0,
+            graphValue,
+            Wallet,
+            cashondelivery,
+            Razorpay
+        });
     } catch (error) {
         console.log(error);
     }
 }
 
-// loding admin dashbord
-const loadUser = async (req, res) => {
+
+
+const LoadUser = async (req, res) => {
     try {
         const usersData = await userModal.find({})
         console.log(usersData);
@@ -245,8 +250,8 @@ const loadUser = async (req, res) => {
 }
 
 
-// block user
-const blockUser = async (req, res) => {
+
+const BlockUser = async (req, res) => {
 
     try {
         const userId = req.body.userId;
@@ -258,8 +263,8 @@ const blockUser = async (req, res) => {
     }
 };
 
-// unblock user
-const unblockUser = async (req, res) => {
+
+const UnblockUser = async (req, res) => {
     try {
         const user = req.body.userId;
         await userModal.updateOne({ _id: user }, { $set: { is_blocked: false } });
@@ -295,8 +300,8 @@ const updatestatus = async (req, res) => {
 
 
 
-// sales
-const sales = async (req, res) => {
+
+const Sales = async (req, res) => {
     const startDate = req.body.startDate
     const endDate = req.body.endDate
     console.log(startDate);

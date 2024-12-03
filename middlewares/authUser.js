@@ -24,11 +24,11 @@
 const isLogout = (req, res, next) => {
     try {
         if (req.session.user_id) {
-            console.log('hi')
-            res.redirect('/indexhome');
+         
+            res.redirect('/');
 
         } else {
-            console.log('hielll')
+           
             next();
         }
 
