@@ -1,8 +1,7 @@
-//  Require modules
+
 const express = require("express");
 const userRoute = express();
 
-// Require user Controllers
 const userController = require("../controllers/userControllers");
 const productController = require('../controllers/productController');
 const User = require("../model/userSchema");
@@ -142,14 +141,9 @@ userRoute.post('/getemail',userController.getemail)
 
 //forgototp
 userRoute.get("/forgototp",userController.forgototp);
-// userRoute.post("/forgototp",userController.)
 
-
-//
 userRoute.post("/forgototp",userController.otpverification);
 
-
-//
 userRoute.get('/changepasswordform',userController.changepasswordform);
 userRoute.post('/changepasswordform',userController.changepassword);
 

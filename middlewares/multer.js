@@ -21,19 +21,6 @@ const uploadProduct = product.fields([
 ]);
 
 
-// const BannerStorage = multer.localStorage({
-//     destination: "public/assets/images/banner",
-
-//     filename:(req,file,callcack)=>{
-//         const filename = file.originalname;
-//         callcack(null,filename)
-//     }
-// })
-
-// const uploadBanner = multer({ storage:BannerStorage})
-
-
-
 
 const BannerStorage = multer.diskStorage({
     destination: "public/assets/images/banner",

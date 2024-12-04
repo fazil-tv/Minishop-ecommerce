@@ -1,10 +1,7 @@
+  
+//   isLogn middleware
 const User = require('../model/userSchema');
 
- 
- 
-  
-  
-  
 const isLogin = (req, res, next) => {
   try {
 

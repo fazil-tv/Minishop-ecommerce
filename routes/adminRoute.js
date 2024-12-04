@@ -1,8 +1,8 @@
-//  Require modules
+
 const express = require("express");
 const adminRoute = express();
 
-// Require  Controllers
+
 const adminController = require("../controllers/adminController");
 const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categoryController');
@@ -52,9 +52,9 @@ adminRoute.get('/category', auth.isLogin, categoryController.category);
 adminRoute.get('/addcategory', auth.isLogin, categoryController.addcategory);
 adminRoute.post('/addcategory', auth.isLogin, categoryController.addCategoryPost);
 
-//edit category
+
 adminRoute.put('/editcategory/:categoryId', auth.isLogin, categoryController.editcategory);
-//block category and unblock
+
 adminRoute.put('/blockCategory', auth.isLogin, categoryController.blockCategory);
 adminRoute.put('/unblockCategory', auth.isLogin, categoryController.unblockCategory);
 //block product

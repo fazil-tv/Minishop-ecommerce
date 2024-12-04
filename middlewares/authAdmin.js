@@ -9,7 +9,7 @@ const isLogin = async (req, res, next) => {
             res.redirect('/admin/login');
         }
     } catch (error) {
-        console.error(error);
+       
         res.redirect('/admin/login');
     }
 }
