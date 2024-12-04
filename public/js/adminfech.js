@@ -1,12 +1,11 @@
 function changeProductStatus(orderId, productId) {
-    console.log('ethiiii');
+
     const statusElementId = `${orderId}${productId}`;
     const newstatus = document.getElementById(statusElementId).value;
 
 
 
-    // const newstatus = document.getElementById("newstatus").value
-    console.log(orderId, productId, newstatus);
+
 
 
     try {
@@ -27,8 +26,6 @@ function changeProductStatus(orderId, productId) {
 
                 if (data.success === true) {
                     window.location.reload();
-
-                    // $('#relodedive').load('/detaile #relodedive');
 
                 }
 
@@ -53,7 +50,7 @@ function changeProductStatus(orderId, productId) {
 
 function cancelorder(x) {
     const orderId = x;
-    console.log(orderId);
+ 
     fetch('/orderstatus', {
         method: 'DELETE',
         headers: {
@@ -99,7 +96,7 @@ function blockButton(bannerId) {
                 if (data.status === true || data.status === false) {
 
                     window.location.reload();
-                    // $('#relode-div').load('/detaile #relode-div');
+                
 
                 }
 
@@ -131,7 +128,7 @@ function addwishlist() {
                 if (data.status === true || data.status === false) {
 
                     window.location.reload();
-                    // $('#relode-div').load('/detaile #relode-div');
+                  
 
                 }
             }).catch(error => {
@@ -146,14 +143,12 @@ function addwishlist() {
 
 function applyfilter() {
     const selectedvalue = document.getElementById("selectoption").value;
-    console.log(selectedvalue);
+    
 
 
     const startDate = document.getElementById("startDate").value
     const endDate = document.getElementById("endDate").value
 
-    console.log(startDate)
-    console.log(endDate)
 
 
     try {
@@ -172,7 +167,7 @@ function applyfilter() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data.totalDoc,data.page)
+             
                 if (data && data.orderData) {
 
                     const tableBody = document.getElementById('table-body');

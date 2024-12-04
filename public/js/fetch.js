@@ -18,11 +18,6 @@ async function fetchOTP(userId, email) {
 
             window.location.reload()
 
- 
-
-            console.log('Resend OTP request successful');
-
-
         } else {
             console.error('Resend OTP request failed');
         }
@@ -30,52 +25,6 @@ async function fetchOTP(userId, email) {
         console.error('Error during Resend OTP request:', error);
     }
 }
-
-
-
-
-//forget resend otp
-
-// async function forgetOTP(userId, email) {
-
-//     event.preventDefault();
-//     try {
-//         const response = await fetch('/resendotp', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ userId, email }),
-//         });
-
-//         if (response.ok) {
-
-//             window.location.reload()
-
-
-
-//             console.log('Resend OTP request successful');
-
-
-//         } else {
-//             console.error('Resend OTP request failed');
-//         }
-//     } catch (error) {
-//         console.error('Error during Resend OTP request:', error);
-//     }
-// }
-
-
-
-
-// otp timer
-
-
-
-
-
-
-
 
 
 function addressvalidation() {
@@ -106,7 +55,7 @@ function addressvalidation() {
         document.getElementById('fullname-error').textContent = 'enter your name';
         isValid = false;
     }
-    console.log(email)
+  
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
     if (!email || !emailPattern.test(email)) {
@@ -156,7 +105,7 @@ function addressvalidation() {
 
 
 function address() {
-    console.log("ok");
+   
 
     const fullname = document.getElementById('fullname').value;
     const mobile = document.getElementById('mobile').value;
@@ -186,8 +135,7 @@ function address() {
             if (data) {
 
                 document.getElementById('addaddressmodal').style.display = "none";
-                // $('#edit-address-div').load('/useraccount #edit-address-div');
-                // $('#editdive').load('/useraccount #editdive');
+               
                 window.location.reload();
 
 
@@ -245,7 +193,6 @@ function editaddressvalidation() {
         isValid = false;
     }
 
-    console.log(email)
 
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!email || !emailPattern.test(email)) {
