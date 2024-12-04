@@ -387,23 +387,21 @@
 
             function blockproduct(productId) {
 
-                console.log(productId);
+              
 
                 // Get the button element associated with the user
                 const blockButton = document.getElementById(`blockButton${productId}`);
 
                 let text = blockButton.innerHTML;
                 if (text === "block") {
-                    console.log("hiiiii")
+                   
                     $.ajax({
                         url: `/admin/blockProduct/${productId}`,
                         type: 'PUT',
                         contentType: 'application/json',
                         data: JSON.stringify({ productId }),
                         success: function (data) {
-                            console.log(data.message, 'data message from success');
-                            // $(`#buttonContainer${productId}`).load(`admin/product #buttonContainer${productId}`)
-                            // $('#buttonContainer').load('/admin/product #buttonContainer')
+                           
                             window.location.reload();
 
                         },
@@ -422,8 +420,7 @@
                         contentType: 'application/json',
                         data: JSON.stringify({ productId }),
                         success: function (data) {
-                            console.log(data.message);
-                            // $("#buttonContainer").load('/admin/product #buttonContainer')
+                          
                             window.location.reload();
 
                         },
@@ -439,7 +436,7 @@
         </script>
         <script>
             function showConfirmationModal(productId, status) {
-                //button text changing
+               
 
                 if (status == "true") {
                     document.getElementById('mbid').innerText = 'unblock'
@@ -457,19 +454,13 @@
             }
         </script>
 
-        <!-- <div class="d-flex justify-content-center pb-5">
-            <a href="/admin/addproduct" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add
-                products</a>
-        </div> -->
-
-
 
 
         <script>
             let index;
             function showofferModal(i) {
                 index = i;
-                //button text changing
+          
                 if (status == "true") {
 
                     document.getElementById('mbid').innerText = 'unblock'
@@ -485,7 +476,7 @@
             function confirmBlockUser() {
 
                 const userId = $('#offerconfirmationModal').data('userId');
-                console.log(userId);
+               
                 blockUser(userId)
 
                 $('#offerconfirmationModal').modal('hide');
@@ -521,14 +512,6 @@
 
     <script src="/js/fetch.js"></script>
 
-
-    <!-- <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/vendors/select2.min.js"></script>
-    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script> -->
-    <!-- Main Script -->
-    <!-- <script src="assets/js/main.js?v=1.1" type="text/javascript"></script> -->
 </body>
 
 </html>

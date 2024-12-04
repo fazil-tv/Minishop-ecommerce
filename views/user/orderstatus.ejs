@@ -107,7 +107,7 @@
                     <div class="info bg-white p-4">
                         <h4 class="pb-3">Delivery Address</h4>
 
-                        <%console.log(userAddress,"######")%>
+                   
 
                         <p><span class="address-p">Name:</span> <a class="pr-5">
                                 <%= userAddress.address[0].fullname %></br>
@@ -185,7 +185,7 @@
                     <h3 class="mb-4">Products</h3>
 
                     <% orders.products.forEach(function(product, index) { %>
-                        <%= console.log(product) %>
+                   
                             <div class="card mt-3">
                                 <div class="card-body pb-0">
                                     <div class="product-card row">
@@ -311,7 +311,7 @@
                                         <div class="col-lg-3 p-3">
                                             <div style=" ">
                                                 <h6 style="">
-                                                    <%console.log("ok",product._id , product.productId._id,orders._id)%>
+                                                 
 
                                                     <% if (product.productstatus==="canceled" ) { %>
                                                         <div class="status-icon-cancelde"></div>

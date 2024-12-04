@@ -213,7 +213,7 @@
     function addCategoryValidation() {
         event.preventDefault();
         const categoryname = document.getElementById('product_name').value;
-        console.log(categoryname);
+   
         const description = document.getElementById('product_disc').value;
 
         const validateCategoryName = (categoryname) => {
@@ -227,9 +227,7 @@
 
         if (isCategoryValid && description) {
 
-            // $('#mycard').submit();
-            // return console.log("Category name is valid");
-            console.log(categoryname, "######", description);
+          
             document.getElementById('invalid').style.display="none"
 
 
@@ -237,7 +235,7 @@
 
         } else {
             document.getElementById('invalid').style.display="block"
-            console.log("Invalid category name or empty description");
+           
         }
 
     }
@@ -249,7 +247,7 @@
 
 
     function addcategory(categoryname, description) {
-        console.log("$$$$$", categoryname, "%%%%%", description);
+        
 
         fetch('/admin/addcategory', {
             method: 'POST',
@@ -267,10 +265,6 @@
 
                     document.getElementById("added").style.display = "block";
 
-                
-
-                    // window.location.href = "/addcategory";
-                    console.log("this category is already added");
                 } else {
                     window.location.href = "/admin/category";
                 }

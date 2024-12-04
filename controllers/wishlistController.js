@@ -19,7 +19,7 @@ const wishlist = async (req, res) => {
     try {
         if (req.session.user_id) {
             const wishlist1 = await wishlistSchema.find({user:req.session.user_id})
-            console.log(wishlist1,"mmmm");
+     
             const wishlist = await wishlistSchema.findOne({user:req.session.user_id}).populate({
                 path: 'product.productId',
                 populate: {
@@ -33,7 +33,6 @@ const wishlist = async (req, res) => {
                 }
             });
     
-            console.log(wishlist,"wishliST ALL");
             res.render('wishlist', { wishlist });
         } else {
             console.log('not sesssion');

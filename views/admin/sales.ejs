@@ -225,8 +225,7 @@
                                     const startDateInput = document.getElementById("startDate").value;
                                     const endDateInput = document.getElementById("endDate").value;
 
-                                    console.log(startDateInput);
-                                    console.log(endDateInput);
+               
 
                                     let isValid = true;
 
@@ -330,7 +329,7 @@
                                         </td>
                                         <td scope="col">
                                             <p>
-                                                <%console.log(data,"datas")%>
+                                              
                                                 <%= data.userData[0].email%>
                                             </p>
                                         </td>
@@ -390,7 +389,7 @@
             if (index === 0) data = [];
             data.push(order);
 
-            console.log(order.orderDate, "hmmmmmmm");
+          
             const tableBody = document.getElementById('table-body');
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -409,9 +408,9 @@
         function downlode() {
             const selectedformat = document.getElementById("selectformat").value;
 
-            console.log(data, "globslll");
+            
             const datas = data;
-            console.log("oo%%%ok", datas);
+        
 
             try {
                 fetch('/admin/salesreport', {
